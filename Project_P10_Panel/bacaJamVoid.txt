@@ -1,0 +1,132 @@
+void baca(int angka) {
+  if (angka > 9){
+    int tmp1, tmp2;
+    tmp1 = angka / 10;
+    tmp2 = angka % 10;
+    switch (tmp1) {
+      case 1: {
+          if (tmp2 == 0)        mp3.play (10);
+          else if (tmp2 == 1)   mp3.play (11);
+          else if (tmp2 == 2)   mp3.play (12);
+          else if (tmp2 == 3)   mp3.play (13);
+          else if (tmp2 == 4)   mp3.play (14);
+          else if (tmp2 == 5)   mp3.play (15);
+          else if (tmp2 == 6)   mp3.play (16);
+          else if (tmp2 == 7)   mp3.play (17);
+          else if (tmp2 == 8)   mp3.play (18);
+          else if (tmp2 == 9)   mp3.play (19);
+          break;
+        }
+      case 2: mp3.play (2); delay(640); mp3.play (26); break; // 26 file "puluh"
+      case 3: mp3.play (3); delay(580); mp3.play (26);break;
+      case 4: mp3.play (4); delay(580); mp3.play (26);break;
+      case 5: mp3.play (5); delay(580); mp3.play (26);break;
+    }
+    delay(600);
+    if (tmp2 > 0 && angka > 19)
+      switch (tmp2) {
+        case 1: mp3.play (1); break;
+        case 2: mp3.play (2); break;
+        case 3: mp3.play (3); break;
+        case 4: mp3.play (4); break;
+        case 5: mp3.play (5); break;
+        case 6: mp3.play (6); break;
+        case 7: mp3.play (7); break;
+        case 8: mp3.play (8); break;
+        case 9: mp3.play (9); delay(100); break;
+      }
+  delay(670);
+  }
+  else if (angka <= 9){
+    switch (angka) {
+        case 1: mp3.play (1); break;
+        case 2: mp3.play (2); break;
+        case 3: mp3.play (3); break;
+        case 4: mp3.play (4); break;
+        case 5: mp3.play (5); break;
+        case 6: mp3.play (6); break;
+        case 7: mp3.play (7); break;
+        case 8: mp3.play (8); break;
+        case 9: mp3.play (9); delay(100); break;
+    }
+    delay(670);
+  }
+}
+
+void bacaJam(uint8_t jam, uint8_t menit, uint8_t jadwal, bool play){
+  uint8_t wakt;
+
+ 
+  if (analogRead(tombol_jam) > 180 || (play)) {
+      //Serial.println("tombol ditekan!");
+
+      if      (jam >=1 && jam <= 10)  wakt = 0;
+      else if (jam >= 11 && jam <= 14)wakt = 1;
+      else if (jam >= 15 && jam <= 18)wakt = 2;
+      else                            wakt = 3;
+    
+      //Serial.println(String(jam) + ":" + String(menit));
+      //Serial.println(st);
+      switch(jadwal){
+        case 0: mp3.play (27);  delay(1430); break; // "saat ini"
+        case 1: mp3.play (29);  delay(1730); mp3.play (29);  delay(1730); break;// "imsak"
+        case 2: mp3.play (30);  delay(2130); mp3.play (30);  delay(2130); break;// "subuh"
+        case 3: mp3.play (31);  delay(2130); mp3.play (31);  delay(2130); break;// "dzuhur"
+        case 4: mp3.play (32);  delay(2130); mp3.play (32);  delay(2130); break;// "ashar"
+        case 5: mp3.play (33);  delay(2130); mp3.play (33);  delay(2130); break;// "maghrib"
+        case 6: mp3.play (34);  delay(2130); mp3.play (34);  delay(2130); break;// "isya"
+        case 7: mp3.play (35);  delay(2130); mp3.play (35);  delay(2130); break;// "jumat"
+      }
+      
+//      mp3.play (27);  
+//      delay(1400); // "saat ini"
+      mp3.play (25); // "jam"
+      delay(530);
+      
+      if (jam > 12) { jam -= 12; }
+      else if (jam == 0) {jam = 12; }
+      
+      if (menit > 45){
+        kurang = true;
+        lebih = false;
+        pas = false;
+      }
+      if (menit < 45) {
+        kurang = false;
+        lebih = true;
+        pas = false;
+      }
+      if (menit == 0) {
+        kurang = false;
+        lebih = false;
+        pas = true;
+      }
+     
+      if (kurang) {
+        baca(jam+1);
+        mp3.play(22); // mp3 kurang
+        delay(630);
+        baca(60 - menit);
+//        mp3.play(24); //mp3 menit
+      }
+      if (lebih) {
+        baca(jam);
+        mp3.play(23); //mp3 lebih
+        delay(680);
+        baca(menit);
+//        mp3.play(24); //mp3 menit
+      }
+   
+      if (pas) { baca(jam); }
+      //Serial.println(String(jam) + ":" + String(menit));
+      //Serial.println(st);
+      
+       switch(wakt){
+        case 0: mp3.play (37); break;// mp3 pagi
+        case 1: mp3.play (38); break;// mp3 siang
+        case 2: mp3.play (39); break;// mp3 sore
+        case 3: mp3.play (40); break;// mp3 malam
+      }
+      if(jadwal > 1) { delay(3000); mp3.play (36); }// mp3 adzan, jika jadwal tidak 0/1 imsak tidak masuk (bukan waktu sholat)
+  }
+}

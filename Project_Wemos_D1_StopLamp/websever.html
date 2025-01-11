@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>STOPLAMP SETTING PAGE</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: lightslategray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 170vh;
+    margin: 0;
+}
+.container {
+    background-color: gray;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 900%;
+}
+h1, h2 {
+    color: #333;
+    text-align: center;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+table, th, td {
+    border: 1px solid #ccc;
+}
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+input[type='text'] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+input[type='radio'] {
+    margin-right: 5px;
+}
+input[type='submit'] {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+input[type='submit']:hover {
+    background-color: #45a049;
+}
+h5 a {
+    color: #007BFF;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+<div class='container'>    
+    <h1>SETTING MENU</h1> 
+    <h2>STOPLAMP RUNNING TEXT VARIO</h3> 
+    <form action='/overwriteSettings' method='get'> 
+        <table>
+                <td colspan='2'> 
+                    <label>Pilih Mode :</label> 
+                    <br><br> 
+                    <label><input type='radio' id='slc1' name='selection' value='1' "+m1+"> Running Teks </label> 
+                    <label><input type='radio' id='slc2' name='selection' value='2' "+m2+"> Animasi </label> 
+                    <label><input type='radio' id='slc3' name='selection' value='3' "+m3+"> Kombinasi </label> 
+                    <label><input type='radio' id='slc4' name='selection' value='4' "+m4+"> Manual </label> 
+                </td> 
+            <tr> 
+                <td style='width:25%' ><b>Teks 1</b></td> 
+                <td style='width:75%' ><input type='text' name='text1' value='"+T1+"' maxlength='50'></td> 
+            </tr> 
+            <tr> 
+                <td style='width:25%' ><b>Teks 2</b></td> 
+                <td style='width:75%' ><input type='text' name='text2' value='"+T2+"' maxlength='50'></td> 
+            </tr> 
+            <tr> 
+                <td colspan='2'> 
+                    <label>Kecepatan Teks Sekarang : "+cepat+"mS</label> 
+                    <br><br> 
+                    <input type='range' style='width:500px' id='RangeCepat' name='kecepatan' value='"+cepat+"' min='10' max='100' oninput='this.nextElementSibling.value = this.value'> 
+                    <output>"+cepat+"</output>mS
+                </td> 
+            </tr> 
+        </table>
+        <table>
+            <tr><td colspan='5'><label>Animasi (Pilih Mode Manual): </label></td></tr> 
+            <tr> 
+                <td style='width:20%'> 
+                   <label><input type='checkbox' id='man1' name='man1' value='1'> 1</label>
+                   <br>  
+                   <label><input type='checkbox' id='man2' name='man2' value='1'> 2</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man3' name='man3' value='1'> 3</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man4' name='man4' value='1'> 4</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man5' name='man5' value='1'> 5</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man6' name='man6' value='1'> 6</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man7' name='man7' value='1'> 7</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man8' name='man8' value='1'> 8</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man9' name='man9' value='1'> 9</label>  
+                   <br>  
+                   <label><input type='checkbox' id='man10' name='man10' value='1'> 10</label> 
+                </td> 
+                <td style='width:20%'> 
+                   <label><input type='checkbox' id='man11' name='man11' value='1'> 11</label>
+                   <br>  
+                   <label><input type='checkbox' id='man12' name='man12' value='1'> 12</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man13' name='man13' value='1'> 13</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man14' name='man14' value='1'> 14</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man15' name='man15' value='1'> 15</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man16' name='man16' value='1'> 16</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man17' name='man17' value='1'> 17</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man18' name='man18' value='1'> 18</label> 
+                   <br>   
+                   <label><input type='checkbox' id='man19' name='man19' value='1'> 19</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man20' name='man20' value='1'> 20</label> 
+                </td> 
+                <td style='width:20%'> 
+                   <label><input type='checkbox' id='man21' name='man21' value='1'> 21</label>
+                   <br>  
+                   <label><input type='checkbox' id='man22' name='man22' value='1'> 22</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man23' name='man23' value='1'> 23</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man24' name='man24' value='1'> 24</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man25' name='man25' value='1'> 25</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man26' name='man26' value='1'> 26</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man27' name='man27' value='1'> 27</label>  
+                   <br>  
+                   <label><input type='checkbox' id='man28' name='man28' value='1'> 28</label> 
+                   <br>   
+                   <label><input type='checkbox' id='man29' name='man29' value='1'> 29</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man30' name='man30' value='1'> 30</label> 
+                </td> 
+                <td style='width:20%'> 
+                   <label><input type='checkbox' id='man31' name='man31' value='1'> 31</label>
+                   <br>  
+                   <label><input type='checkbox' id='man33' name='man33' value='1'> 32</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man33' name='man33' value='1'> 33</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man34' name='man34' value='1'> 34</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man35' name='man35' value='1'> 35</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man36' name='man36' value='1'> 36</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man37' name='man37' value='1'> 37</label> 
+                   <br>  
+                   <label><input type='checkbox' id='man38' name='man38' value='1'> 38</label> 
+                   <br>   
+                   <label><input type='checkbox' id='man39' name='man39' value='1'> 39</label> 
+                   <br>    
+                   <label><input type='checkbox' id='man40' name='man40' value='1'> 40</label>
+                </td>
+            </tr>
+        <table> 
+            <tr><td colspan='2'>Atur Variabel Panel :</td></tr> 
+            <td colspan='2'> 
+                <label>Kecerahan Sekarang : "+bright+"</label> 
+                <br><br> 
+                <input type='range' style='width: 500px' id='RangeCerah' name='Kecerahan' value='"+bright+"' min='1' max='15' oninput='this.nextElementSibling.value = this.value'>
+                <output>"+bright+"</output> 
+                <br><br> 
+                <label>Lama Tiap Animasi Sekarang : "+waktuAnim+"S</label> 
+                <br><br> 
+                <input type='range' style='width: 500px' id='rangeEfek' name='Efek' value='"+waktuAnim+"' min='1' max='20' oninput='this.nextElementSibling.value = this.value'>
+                <output>"+waktuAnim+"</output>S 
+            </td> 
+        </table>
+        <table>
+            <tr><td colspan='2'>Atur Mode Sein-Stop :</td></tr>
+            <tr>
+                <td colspan='2'>
+                    <br>
+                    <label>Kecepatan Sein Sekarang : "+waktuSein+"mS</label> 
+                    <br><br> 
+                    <input type='range' style='width: 500px' id='rangeSein' name='Sein' value='"+waktuSein+"' min='2' max='50' oninput='this.nextElementSibling.value = this.value'>
+                    <output>"+waktuSein+"</output>mS 
+                    <label>Mode Sein :   </label>
+                    <label><input type='radio' id='slc1' name='slctSein' value='1' "+r1+"> 1</label>
+                    <label><input type='radio' id='slc2' name='slctSein' value='2' "+r2+"> 2</label>
+                    <label><input type='radio' id='slc3' name='slctSein' value='3' "+r3+"> 3</label>
+                    <br><br><br>
+                    <label>Kecepatan Stop Sekarang : "+waktuStop+"mS</label> 
+                    <br><br> 
+                    <input type='range' style='width: 500px' id='rangeStop' name='Stop' value='"+waktuStop+"' min='2' max='50' oninput='this.nextElementSibling.value = this.value'>
+                    <output>"+waktuStop+"</output>mS 
+                    <br><br>
+                    <label>Mode Stop :   </label>
+                    <label><input type='radio' id='slc1' name='slctStop' value='1' "+s1+"> 1</label>
+                    <label><input type='radio' id='slc2' name='slctStop' value='2' "+s2+"> 2</label>
+                    <label><input type='radio' id='slc3' name='slctStop' value='3' "+s3+"> 3</label>
+                </td>
+           </tr>
+            <tr>
+                <td>
+                   <input type='submit' name='Save' value='Submit'>
+                   <h5><a href='http://192.168.4.1/update'>© 2023 vario Stoplamp</a></h5>
+                   <h5>
+                     <a href='https://www.youtube.com/@DBOSSProject'>@DBOSSProject</a> x <a href='https://www.instagram.com/Hab_mz'>@Hab_mz</a>
+                   </h5>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>
