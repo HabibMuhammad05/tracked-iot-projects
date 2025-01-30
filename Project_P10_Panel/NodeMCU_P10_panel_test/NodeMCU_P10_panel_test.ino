@@ -27,7 +27,7 @@
 //#include <fonts/DejaVuSansBold9.h>
 //#include <fonts/DejaVuSansItalic9.h>
 //#include <fonts/ElektronMart5x6.h>
-//#include <fonts/ElektronMart6x8.h>
+#include <fonts/ElektronMart6x8.h>
 #include <fonts/ElektronMart6x12.h>
 #include <fonts/ElektronMart6x16.h>
 //#include <fonts/ElektronMartArabic3x6.h>
@@ -45,7 +45,7 @@
 #include "verdanav2.h"
 
 //SETUP DMD
-#define DISPLAYS_WIDE 1 // Kolom Panel
+#define DISPLAYS_WIDE 2 // Kolom Panel
 #define DISPLAYS_HIGH 1 // Baris Panel
 DMDESP Disp(DISPLAYS_WIDE, DISPLAYS_HIGH);  // Jumlah Panel P10 yang digunakan (KOLOM,BARIS)
 
@@ -70,13 +70,23 @@ void setup() {
 
 void loop() {
   Disp.loop(); // Jalankan Disp loop untuk refresh LED
-  Disp.setFont(verdanav2); // Tentukan huruf
-  TeksJalan(-1, 40); // Tampilkan teks berjalan TeksJalan(posisi y, kecepatan);
-  Disp.setFont(SystemFont5x7); // Tentukan huruf
   
-  Disp.drawText(1, 8, "00");
-  Disp.drawText(20, 8, "49");
-  Disp.drawText(14, 8, ":");
+  Disp.setFont(ElektronMart6x8);
+  Disp.drawText(-2, 0,"#");
+  Disp.setFont(verdanav2); 
+  Disp.drawText(15, -1," ");
+  Disp.drawText(17, -1,"12:20:59");
+  Disp.drawRect(0,7,Disp.width(),7,1,1);
+  TeksJalan(8, 50);
+  
+  Disp.drawRect(62,14,63,15,1,1);
+//  Disp.setFont(EMSansSP8x16); // Tentukan huruf
+//  TeksJalan(-1, 40); // Tampilkan teks berjalan TeksJalan(posisi y, kecepatan);
+//  Disp.setFont(SystemFont5x7); // Tentukan huruf
+//  
+//  Disp.drawText(1, 8, "00");
+//  Disp.drawText(20, 8, "49");
+//  Disp.drawText(14, 8, ":");
 //  delay(14900);
 //  Disp.drawText(0,0,"          "); // Tampilkan teks
 //  delay(1000);
@@ -94,7 +104,7 @@ void loop() {
 //--------------------------
 // TAMPILKAN SCROLLING TEKS
 
-static char *teks[] = {"TUNGGU IQOMAH"};
+static char *teks[] = {"LURUSKAN DAN RAPATKAN SHAF - MOHON MATIKAN/BISUKAN HANDPHONE"};
 
 void TeksJalan(int y, uint8_t kecepatan) {
 
