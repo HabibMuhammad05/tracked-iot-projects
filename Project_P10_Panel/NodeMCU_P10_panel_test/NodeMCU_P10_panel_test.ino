@@ -24,7 +24,7 @@
 
 #include <DMDESP.h>
 //#include <fonts/DejaVuSans9.h>
-//#include <fonts/DejaVuSansBold9.h>
+#include <fonts/DejaVuSansBold9.h>
 //#include <fonts/DejaVuSansItalic9.h>
 //#include <fonts/ElektronMart5x6.h>
 #include <fonts/ElektronMart6x8.h>
@@ -43,6 +43,7 @@
 #include "ElektronMart6x12.h"
 #include "SystemFont5x7.h"
 #include "verdanav2.h"
+#include <Font_6x14.h>
 
 //SETUP DMD
 #define DISPLAYS_WIDE 2 // Kolom Panel
@@ -70,16 +71,66 @@ void setup() {
 
 void loop() {
   Disp.loop(); // Jalankan Disp loop untuk refresh LED
+
+  uint8_t rJam = 12;
+  uint8_t rMen = 36;
+  uint8_t rDet = 12;
+  char jam[9];
   
-  Disp.setFont(ElektronMart6x8);
-  Disp.drawText(-2, 0,"#");
-  Disp.setFont(verdanav2); 
-  Disp.drawText(15, -1," ");
-  Disp.drawText(17, -1,"12:20:59");
-  Disp.drawRect(0,7,Disp.width(),7,1,1);
-  TeksJalan(8, 50);
+    sprintf(jam,"%02d:%02d:%02d", rJam, rMen, rDet);
+    Disp.setFont(verdanav2); 
+    Disp.drawText(17, 8, jam);
+    
+    Disp.drawText(31, -1, ":");
+    Disp.drawText(48, -1, ":");
+    Disp.drawText(17, -1, String(rJam));
+    Disp.drawText(34, -1, String(rMen));
+    Disp.drawText(51, -1, String(rDet));
+    
+//    Disp.drawRect(0,9,Disp.width(),15,0,0);
+//    Disp.setFont(verdanav2); 
+//    Disp.drawText(5 - x, 8, tgl);
+    
+//    Disp.setFont(ElektronMart6x8);
+//    Disp.drawText(width - x, 9, configjws.namamasjid);  
+    Disp.drawRect(0,8,Disp.width(),8,1,1);  
   
-  Disp.drawRect(62,14,63,15,1,1);
+//  Disp.setFont(ElektronMart6x8);
+//  Disp.drawText(-2, 0,"#");
+//  Disp.setFont(verdanav2); 
+//  Disp.drawText(15, -1," ");
+//  Disp.drawText(17, -1,"12:20:59");
+//  Disp.drawRect(0,7,Disp.width(),7,1,1);
+//  TeksJalan(8, 50);
+//  char jamFull[5];
+//  
+//  char jam[3];
+//  char menit[3];
+//  char detik[3];
+//  sprintf(jam, "%02d", rJam);
+//  sprintf(menit, "%02d", rMen);
+//  sprintf(detik, "%02d", rDet);
+  
+//  sprintf(jamFull, "%02d %02d", rJam, rMen);
+//  Disp.setFont(verdanav2); 
+//  Disp.drawText(0,8, jamFull);
+//  Disp.drawText(15,8, ":");
+//  
+//  Disp.drawRect(62,14,63,15,1,1); 
+//  
+//  Disp.setFont(Font_6x14);
+//  Disp.drawText(31, 0, jam);
+//  //MENIT
+//  Disp.setFont(verdanav2);
+//  Disp.drawText(51, -1, menit);
+//  //DETIK          
+//  Disp.setFont(verdanav2);
+//  Disp.drawText(51, 8, menit);
+
+//      Disp.setFont(DejaVuSansBold9);
+//      textCenter(-1, "--LURUSKAN--");
+//      textCenter(8, "----SHAF----");   
+  
 //  Disp.setFont(EMSansSP8x16); // Tentukan huruf
 //  TeksJalan(-1, 40); // Tampilkan teks berjalan TeksJalan(posisi y, kecepatan);
 //  Disp.setFont(SystemFont5x7); // Tentukan huruf
@@ -124,4 +175,12 @@ void TeksJalan(int y, uint8_t kecepatan) {
     Disp.drawText(width - x, y, teks[0]);
   }  
 
+}
+
+//--------------------------- FORMAT TEKS ---------------------------//
+void textCenter(int y,String Msg) {
+  
+  int center = int((Disp.width()-Disp.textWidth(Msg)) / 2);
+  Disp.drawText(center,y,Msg);
+  
 }
