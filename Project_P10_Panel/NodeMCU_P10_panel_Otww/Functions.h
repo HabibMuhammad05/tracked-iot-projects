@@ -4,9 +4,16 @@ void getTime(){
   Epoch_Time = timeClient.getEpochTime()+ 1;
   Serial.println(Epoch_Time);
   delay(500);
-  if( Epoch_Time >= 1357041600) { 
+  
+  if( Epoch_Time >= 1735693200 and Epoch_Time <= 2000000000) { 
      setTime(Epoch_Time);
+  }else{
+     tone(buzzer,1000); delay(500); noTone(buzzer);
+     Serial.println(" Date Failed, Resetting...");
+     ESP.restart();
   }
+  
+  
 }
 
 void GetDateTime() {
