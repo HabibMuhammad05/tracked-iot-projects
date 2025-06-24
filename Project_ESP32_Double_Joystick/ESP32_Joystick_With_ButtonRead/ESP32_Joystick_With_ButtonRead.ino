@@ -14,7 +14,10 @@ static const unsigned char image_InfraredArrowDown_bits[] U8X8_PROGMEM = {0xff,0
 static const unsigned char image_ButtonRight_bits[] U8X8_PROGMEM = {0x01,0x03,0x07,0x0f,0x07,0x03,0x01};
 static const unsigned char image_ButtonLeft_bits[] U8X8_PROGMEM = {0x08,0x0c,0x0e,0x0f,0x0e,0x0c,0x08};
 
-uint8_t button[14] = {32, 33, 25, 26, 27, 14, 12, 13, 18, 15, 5, 4, 17, 16  }; // "L3", "R3", "L2", "L1", "UP", "LEFT", "DOWN", "RIGHT", "SQUARE", "CROSS", "ROUND", "TRIANGLE", "R2", "R1"
+uint8_t button[15] = {33,   18,   16,   17,   4,     15,     13,     12,       25,      26,      27,        14,      19,   23,  2}; 
+                  // "L3", "R3", "L2", "L1", "UP", "LEFT", "DOWN", "RIGHT", "SQUARE", "CROSS", "ROUND", "TRIANGLE", "R2", "R1", SW
+                  //   0    1     2     3     4       5       6       7         8         9       10        11       12    13   14
+//uint8_t button[14] = {32, 33, 25, 26, 27, 14, 12, 13, 18, 15, 5, 4, 17, 16  }; // "L3", "R3", "L2", "L1", "UP", "LEFT", "DOWN", "RIGHT", "SQUARE", "CROSS", "ROUND", "TRIANGLE", "R2", "R1"
 bool stat[14];
 unsigned long previousMillis = 0;        // will store last time LED was updated
 
@@ -38,17 +41,17 @@ int joy2XCenter = 0;
 int joy2YCenter = 0;
 
 // Threshold value to create a dead zone around the center
-const int centerThreshold = 10;
+const int centerThreshold = 45;
 
 void setup() {
 
   u8g2.begin();
   Serial.begin(115200);
 
-  for(uint8_t i = 0; i < 14; i++){
-    pinMode(button[i], INPUT);
+  for(uint8_t i = 0; i < 15; i++){
+    pinMode(button[i], INPUT_PULLUP);
   }
-  pinMode(LED_BUILTIN, OUTPUT);
+//  pinMode(LED_BUILTIN, OUTPUT);
 
   // Calibration phase
   calibrateJoysticks();
@@ -69,12 +72,12 @@ void setup() {
 
 void loop() {
 
-  if (millis() - previousMillis >= 1000) {
-    previousMillis = millis();
-
-    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-  }
-  
+//  if (millis() - previousMillis >= 1000) {
+//    previousMillis = millis();
+//
+//    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+//  }
+//  
   unsigned long startTime = millis();
   
   int joy1XValue = analogRead(joy1XPin) - joy1XCenter;
@@ -92,12 +95,14 @@ void loop() {
   int joy1XPos = map(joy1XValue, -2048, 2048, joy1XBox - boxSize / 2, joy1XBox + boxSize / 2);
   int joy1YPos = map(joy1YValue, -2048, 2048, joy1YBox - boxSize / 2, joy1YBox + boxSize / 2);
   int joy2XPos = map(joy2XValue, -2048, 2048, joy2XBox - boxSize / 2, joy2XBox + boxSize / 2);
-  int joy2YPos = map(joya2YValue, -2048, 2048, joy2YBox - boxSize / 2, joy2YBox + boxSize / 2);
+  int joy2YPos = map(joy2YValue, -2048, 2048, joy2YBox - boxSize / 2, joy2YBox + boxSize / 2);
   
+  Serial.print("joyData: "); Serial.print(joy1XValue); Serial.print(", "); Serial.print(joy1YValue); Serial.print(", "); Serial.print(joy2XValue); Serial.print(", "); Serial.print(joy2YValue); Serial.print(" - ");
+ 
   u8g2.clearBuffer();
   u8g2.setFont(u8g2_font_helvB08_tr);
-    for(uint8_t i = 0; i < 14; i++){
-    stat[i] = digitalRead(button[i]);
+    for(uint8_t i = 0; i < 15; i++){
+    stat[i] = !digitalRead(button[i]);
     if(stat[i]){
       switch(i){
         case 0 : u8g2.drawStr(11, 28, "------L3         --------"); break;
@@ -117,8 +122,8 @@ void loop() {
         default : u8g2.drawStr(11, 28, "--------         --------"); break;
       }
     }
-//    Serial.print(digitalRead(button[i]));
-//    Serial.print(", ");
+    Serial.print(digitalRead(button[i]));
+    Serial.print(", ");
   }
   u8g2.drawStr(11, 28, "--------         --------");
   
