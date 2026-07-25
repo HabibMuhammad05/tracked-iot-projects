@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Exhaust Fan — Panel Kontrol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1B1E20;
+    --panel: #24282B;
+    --panel-2: #2C3134;
+    --line: #363C40;
+    --text: #ECE8E0;
+    --text-muted: #8A9199;
+    --exhaust: #E2892E;
+    --intake: #3FA796;
+    --off: #5B6470;
+    --danger: #C0533E;
+    --radius: 10px;
+    font-size: 16px;
+  }
+  *{ box-sizing: border-box; }
+  html,body{
+    margin:0; padding:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono{
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .wrap{
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 18px 16px 40px;
+  }
+
+  /* ---------- TOP BAR ---------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 10px 14px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+  }
+  .topbar .brand{
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .topbar .clock{
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .topbar .wifi{
+    display:flex; align-items:center; gap:6px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+  .dot{
+    width:7px; height:7px; border-radius:50%;
+    background: var(--off);
+    transition: background .3s;
+  }
+  .dot.on{ background: var(--intake); box-shadow: 0 0 6px var(--intake); }
+
+  /* ---------- VANE DIAGRAM (signature element) ---------- */
+  .vane-card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 14px 16px;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .vane-eyebrow{
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    text-align:center;
+  }
+  .duct{
+    position: relative;
+    height: 150px;
+    margin: 0 auto;
+    max-width: 380px;
+  }
+  .duct-line{
+    position:absolute; top:50%; left:8%; right:8%;
+    height: 2px;
+    background: var(--line);
+    transform: translateY(-50%);
+  }
+  .flow-arrow{
+    position:absolute; top:50%; width:10px; height:10px;
+    border-top: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    transform: translateY(-50%) rotate(45deg);
+    opacity: 0;
+  }
+  .flow-arrow.exhaust{ color: var(--exhaust); animation: flowRight 1.6s infinite ease-in-out; }
+  .flow-arrow.intake{ color: var(--intake); animation: flowLeft 1.6s infinite ease-in-out; }
+  @keyframes flowRight{
+    0%{ opacity:0; transform: translateY(-50%) translateX(0) rotate(45deg);}
+    20%{ opacity:1; }
+    80%{ opacity:1; }
+    100%{ opacity:0; transform: translateY(-50%) translateX(26px) rotate(45deg);}
+  }
+  @keyframes flowLeft{
+    0%{ opacity:0; transform: translateY(-50%) translateX(0) rotate(225deg);}
+    20%{ opacity:1; }
+    80%{ opacity:1; }
+    100%{ opacity:0; transform: translateY(-50%) translateX(-26px) rotate(225deg);}
+  }
+  .pivot{
+    position:absolute; top:50%; left:50%;
+    width: 3px; height: 3px;
+    transform: translate(-50%,-50%);
+  }
+  .vane{
+    position:absolute; top:50%; left:50%;
+    width: 3px; height: 78px;
+    background: var(--text);
+    border-radius: 3px;
+    transform-origin: top center;
+    transform: translate(-50%,0) rotate(0deg);
+    transition: transform .5s cubic-bezier(.34,1.2,.4,1), background .3s;
+  }
+  .vane::after{
+    content:"";
+    position:absolute; left: 50%; bottom: -5px;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: inherit;
+    transform: translateX(-50%);
+  }
+  .hub{
+    position:absolute; top:50%; left:50%;
+    width: 13px; height: 13px;
+    background: var(--panel-2);
+    border: 2px solid var(--text);
+    border-radius:50%;
+    transform: translate(-50%,-50%);
+    z-index:2;
+  }
+  .duct-label{
+    position:absolute; bottom: 6px;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .duct-label.left{ left: 2%; }
+  .duct-label.right{ right: 2%; }
+  .angle-readout{
+    text-align:center;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .angle-readout span{ color: var(--text); font-weight: 500; }
+
+  /* ---------- CARDS ---------- */
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .card-title{
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 12px;
+  }
+  .row{
+    display:flex; align-items:center; justify-content:space-between;
+    gap: 10px;
+  }
+
+  /* fan switch */
+  .switch{
+    position:relative;
+    width: 56px; height: 30px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .switch .knob{
+    position:absolute; top:3px; left:3px;
+    width: 22px; height: 22px;
+    background: var(--off);
+    border-radius:50%;
+    transition: transform .25s ease, background .25s ease;
+  }
+  .switch.on .knob{
+    transform: translateX(26px);
+    background: var(--exhaust);
+  }
+  .switch.on{ border-color: var(--exhaust); }
+
+  /* preset buttons */
+  .btn-row{ display:flex; gap:8px; margin-bottom: 12px; }
+  .btn{
+    flex:1;
+    padding: 10px 8px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .btn.active.intake{ background: rgba(63,167,150,0.15); border-color: var(--intake); color: var(--intake); }
+  .btn.active.exhaust{ background: rgba(226,137,46,0.15); border-color: var(--exhaust); color: var(--exhaust); }
+
+  input[type=range]{
+    width: 100%;
+    accent-color: var(--exhaust);
+  }
+  .slider-labels{
+    display:flex; justify-content:space-between;
+    font-size: 0.68rem; color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* mode toggle pills */
+  .pill-group{
+    display:flex;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px;
+  }
+  .pill{
+    flex:1; text-align:center;
+    padding: 7px 0;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    cursor:pointer;
+  }
+  .pill.active{ background: var(--text); color: var(--bg); }
+
+  .sched-row{
+    display:flex; align-items:center; gap: 10px;
+    margin-top: 12px;
+  }
+  .sched-field{
+    flex:1;
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .sched-field label{
+    font-size: 0.65rem; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  input[type=time]{
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 7px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+  }
+  .save-btn{
+    width:100%;
+    margin-top: 12px;
+    padding: 10px;
+    background: var(--intake);
+    border: none;
+    border-radius: 8px;
+    color: #0f1211;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    cursor:pointer;
+  }
+  .save-btn:active{ opacity: 0.85; }
+
+  .disabled{ opacity: 0.4; pointer-events: none; }
+
+  .debug{
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-align:center;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">Exhaust Fan</div>
+    <div class="clock mono" id="clock">--:--:--</div>
+    <div class="wifi">
+      <span class="dot" id="wifiDot"></span>
+      <span id="wifiText">offline</span>
+    </div>
+  </div>
+
+  <div class="vane-card">
+    <div class="vane-eyebrow">Arah Airflow</div>
+    <div class="duct">
+      <div class="duct-line"></div>
+      <div class="flow-arrow intake" style="left:32%"></div>
+      <div class="flow-arrow intake" style="left:22%"></div>
+      <div class="flow-arrow exhaust" style="left:60%"></div>
+      <div class="flow-arrow exhaust" style="left:70%"></div>
+      <div class="vane" id="vane"></div>
+      <div class="hub"></div>
+      <div class="duct-label left">Intake</div>
+      <div class="duct-label right">Exhaust</div>
+    </div>
+    <div class="angle-readout">Posisi servo: <span id="angleText">0&deg;</span> <span id="movingTag" style="color:var(--exhaust); display:none;">&bull; bergerak...</span></div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div class="card-title" style="margin:0;">Fan</div>
+      <div class="switch" id="fanSwitch"><div class="knob"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Airflow</div>
+    <div class="btn-row">
+      <button class="btn intake" id="btnIntake">Intake</button>
+      <button class="btn exhaust" id="btnExhaust">Exhaust</button>
+    </div>
+    <input type="range" min="0" max="180" value="0" id="slider">
+    <div class="slider-labels"><span>0&deg; Intake</span><span>180&deg; Exhaust</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Mode</div>
+    <div class="pill-group">
+      <div class="pill" id="pillManual">Manual</div>
+      <div class="pill" id="pillAuto">Auto</div>
+    </div>
+
+    <div id="schedBlock">
+      <div class="sched-row">
+        <div class="sched-field">
+          <label>Mulai Exhaust</label>
+          <input type="time" id="schedStart">
+        </div>
+        <div class="sched-field">
+          <label>Selesai Exhaust</label>
+          <input type="time" id="schedEnd">
+        </div>
+      </div>
+      <button class="save-btn" id="saveSched">Simpan Jadwal</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">System</div>
+    <div class="btn-row">
+      <a class="btn" href="/update" style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Update Firmware</a>
+      <button class="btn" id="btnWifiReset">Reset WiFi</button>
+    </div>
+  </div>
+
+  <div class="debug mono" id="debugLine">touch raw: -</div>
+
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  let state = {
+    relay:false, servoAngle:0, autoMode:false,
+    schedStartH:8, schedStartM:0, schedEndH:22, schedEndM:0,
+    touchRaw:0, wifiConnected:false, rssi:0, time:"--:--:--"
+  };
+
+  function pad(n){ return n.toString().padStart(2,'0'); }
+
+  function render(){
+    $('clock').textContent = state.time;
+
+    $('wifiDot').classList.toggle('on', state.wifiConnected);
+    $('wifiText').textContent = state.wifiConnected ? (state.rssi + ' dBm') : 'offline';
+
+    // vane rotation: map 0-180 servo angle -> -65deg..+65deg tilt
+    const tilt = (state.servoAngle / 180) * 130 - 65;
+    $('vane').style.transform = `translate(-50%,0) rotate(${tilt}deg)`;
+    $('vane').style.background = state.servoAngle >= 90 ? 'var(--exhaust)' : 'var(--intake)';
+    $('angleText').textContent = state.servoAngle + '\u00B0';
+    $('movingTag').style.display = state.servoMoving ? 'inline' : 'none';
+
+    $('fanSwitch').classList.toggle('on', state.relay);
+
+    $('btnIntake').classList.toggle('active', state.servoAngle < 90);
+    $('btnIntake').classList.toggle('intake', true);
+    $('btnExhaust').classList.toggle('active', state.servoAngle >= 90);
+
+    $('pillManual').classList.toggle('active', !state.autoMode);
+    $('pillAuto').classList.toggle('active', state.autoMode);
+    $('schedBlock').classList.toggle('disabled', !state.autoMode);
+
+    if (document.activeElement !== $('slider')) {
+      $('slider').value = state.servoAngle;
+    }
+    if (document.activeElement !== $('schedStart')) {
+      $('schedStart').value = pad(state.schedStartH) + ':' + pad(state.schedStartM);
+    }
+    if (document.activeElement !== $('schedEnd')) {
+      $('schedEnd').value = pad(state.schedEndH) + ':' + pad(state.schedEndM);
+    }
+
+    $('debugLine').textContent = 'touch raw: ' + state.touchRaw + ' (untuk kalibrasi TTP223)';
+  }
+
+  async function refreshStatus(){
+    try{
+      const res = await fetch('/status');
+      state = await res.json();
+      render();
+    }catch(e){ /* offline sementara, biarkan UI apa adanya */ }
+  }
+
+  async function post(url){
+    try{ await fetch(url, { method:'POST' }); }catch(e){}
+    refreshStatus();
+  }
+
+  $('fanSwitch').addEventListener('click', () => {
+    post('/relay?state=' + (state.relay ? 'off' : 'on'));
+  });
+
+  $('btnIntake').addEventListener('click', () => post('/airflow?preset=intake'));
+  $('btnExhaust').addEventListener('click', () => post('/airflow?preset=exhaust'));
+
+  let sliderTimeout = null;
+  $('slider').addEventListener('input', (e) => {
+    clearTimeout(sliderTimeout);
+    const val = e.target.value;
+    $('angleText').textContent = val + '\u00B0';
+    sliderTimeout = setTimeout(() => post('/servo?angle=' + val), 200);
+  });
+
+  $('pillManual').addEventListener('click', () => post('/mode?value=manual'));
+  $('pillAuto').addEventListener('click', () => post('/mode?value=auto'));
+
+  $('saveSched').addEventListener('click', () => {
+    const start = $('schedStart').value;
+    const end = $('schedEnd').value;
+    post('/schedule?start=' + start + '&end=' + end);
+  });
+
+  $('btnWifiReset').addEventListener('click', () => {
+    if (confirm('Hapus setting WiFi tersimpan dan restart device? Kamu harus setting ulang WiFi lewat portal AP setelah ini.')) {
+      post('/wifi/reset');
+    }
+  });
+
+  refreshStatus();
+  setInterval(refreshStatus, 2000);
+</script>
+</body>
+</html>
